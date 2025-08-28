@@ -1,6 +1,6 @@
 package com.chipay.payments.controller;
 
-import com.chipay.payments.dto.PaymentRequest;
+import com.chipay.payments.crs.dto.PaymentRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 

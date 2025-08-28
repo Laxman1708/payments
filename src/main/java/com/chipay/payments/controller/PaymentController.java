@@ -1,7 +1,7 @@
 package com.chipay.payments.controller;
 
-import com.chipay.payments.dto.PaymentRequest;
-import com.chipay.payments.dto.RootDTO;
+import com.chipay.payments.crs.dto.PaymentRequest;
+import com.chipay.payments.crs.dto.RootDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +31,8 @@ public class PaymentController {
         System.out.println(rootDTO);
 
         System.out.println("categoty desc is: "+rootDTO.getCategoryLookupResults().getCategoryDescription());
-        System.out.println("categoty desc is: "+rootDTO.getCategoryLookupResults().getReceivableGroups().get(0).getReceivables().get(0).getAmountDue());
-            System.out.println("additional info Violation Site value is: "+rootDTO.getCategoryLookupResults().getReceivableGroups().get(0).getReceivables().get(0).getAdditionalInformation().get("Violation Site"));
+        System.out.println("categoty desc for first  one: "+rootDTO.getCategoryLookupResults().getReceivableGroups().get(0).getReceivables().get(0).getAmountDue());
+        System.out.println("additional info Violation Site value is: "+rootDTO.getCategoryLookupResults().getReceivableGroups().get(0).getReceivables().get(0).getAdditionalInformation().getViolationSite());
         return ResponseEntity.ok(rootDTO);
     }
 }

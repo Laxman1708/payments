@@ -1,4 +1,4 @@
-package com.chipay.payments.dto;
+package com.chipay.payments.crs.dto;
 
 import lombok.Data;
 
