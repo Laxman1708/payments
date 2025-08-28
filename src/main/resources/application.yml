@@ -1,0 +1,6 @@
+crs:
+  base-url: https://your-crs-domain.com
+  vendor-id: CLARITY
+  channel-id: WEB
+  location-id: 920
+  terminal-id: 1234
