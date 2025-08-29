@@ -8,11 +8,11 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PaymentControllerTest {
+    class PaymentControllerTest {
 
     @Test
     void testProcessPayment() {
-        com.chipay.payments.controller.PaymentController controller = new com.chipay.payments.controller.PaymentController();
+        com.chipay.payments.controller.PaymentController controller = new com.chipay.payments.controller.PaymentController( );
         PaymentRequest request = new PaymentRequest();
         request.setAmount(100.0);
         request.setCurrency("USD");

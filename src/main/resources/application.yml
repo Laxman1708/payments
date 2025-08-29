@@ -4,3 +4,8 @@ crs:
   channel-id: WEB
   location-id: 920
   terminal-id: 1234
+
+payment:
+  api:
+    hostname: https://webapps3int.chicago.gov
+    transaction-endpoint: /hostedpayments/hostedPaymentPages/transaction

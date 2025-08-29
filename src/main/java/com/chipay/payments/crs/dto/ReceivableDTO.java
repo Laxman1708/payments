@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +30,7 @@ public class ReceivableDTO {
     private String description;
 
     @JsonProperty("amountDue")
-    private double amountDue;
+    private BigDecimal amountDue;
 
     @JsonProperty("allocationOrder")
     private String allocationOrder;
