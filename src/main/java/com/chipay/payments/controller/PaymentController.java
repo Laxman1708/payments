@@ -1,9 +1,10 @@
 package com.chipay.payments.controller;
 
 import com.chipay.payments.cpg.dto.HostedPaymentPageDTO;
-import com.chipay.payments.crs.dto.CategoryLookupResultsDTO;
+import com.chipay.payments.cpg.dto.PaymentRequestDTO;
 import com.chipay.payments.crs.dto.PaymentRequest;
 import com.chipay.payments.crs.dto.RootDTO;
+import com.chipay.payments.mapper.PaymentRequestMapper;
 import com.chipay.payments.service.ReceivablesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,5 +57,11 @@ public class PaymentController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping(("/testCPG"))
+    public ResponseEntity<PaymentRequestDTO> testCPG(@Valid @RequestBody RootDTO paymentRequest) {
+        PaymentRequestDTO paymentRequestDTO = PaymentRequestMapper.mapFromReceivablesResponse(paymentRequest.getCategoryLookupResults());
+        return ResponseEntity.ok(paymentRequestDTO);
     }
 }

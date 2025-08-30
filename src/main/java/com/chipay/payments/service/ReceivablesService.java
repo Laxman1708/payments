@@ -5,6 +5,7 @@ import com.chipay.payments.cpg.dto.PaymentRequestDTO;
 import com.chipay.payments.crs.config.CrsProperties;
 import com.chipay.payments.crs.dto.CategoryLookupResultsDTO;
 import com.chipay.payments.mapper.PaymentRequestMapper;
+import com.chipay.payments.util.TransactionIdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,6 +61,10 @@ public class ReceivablesService {
         log.info("CategoryLookupResultsDTO: {}", categoryLookupResultsDTO);
 
         PaymentRequestDTO paymentRequestDTO = PaymentRequestMapper.mapFromReceivablesResponse(categoryLookupResultsDTO);
+        String clientTransactionId = TransactionIdGenerator.generateClientTransactionId();
+
+        // To be implemented to save clientTransactionId in DB to be information about this txn
+        paymentRequestDTO.setClientTransactionId(clientTransactionId);
         log.info("PaymentRequestDTO: {}", paymentRequestDTO);
 
         HostedPaymentPageDTO hostedPaymentPageDTO = createHostedPayment( paymentRequestDTO);

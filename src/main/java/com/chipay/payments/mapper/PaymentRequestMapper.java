@@ -21,6 +21,8 @@ public class PaymentRequestMapper {
 
 
         // map receivableCategories from receivableGroups
+        System.out.println("Request sent is: "+response);
+        System.out.println("receivableCategories sent is: "+response.getReceivableGroups());
         List<ReceivableCategoryDTO> receivableCategories = response.getReceivableGroups()
                 .stream()
                 .map(group -> {
