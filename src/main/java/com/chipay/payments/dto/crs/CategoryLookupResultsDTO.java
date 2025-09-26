@@ -1,4 +1,4 @@
-package com.chipay.payments.crs.dto;
+package com.chipay.payments.dto.crs;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

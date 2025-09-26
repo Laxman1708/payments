@@ -2,12 +2,10 @@ package com.chipay.payments.service;
 
 import com.chipay.payments.dto.cpg.HostedPaymentPageDTO;
 import com.chipay.payments.dto.cpg.PaymentRequestDTO;
-import com.chipay.payments.dto.cpg.TransactionResponseDTO;
 import com.chipay.payments.config.CpgProperties;
 import com.chipay.payments.config.CrsProperties;
 import com.chipay.payments.dto.crs.CategoryLookupResultsDTO;
 import com.chipay.payments.dto.crs.LocationDTO;
-import com.chipay.payments.mapper.PaymentRequestMapper;
 import com.chipay.payments.util.DecryptPayload;
 import com.chipay.payments.util.TransactionIdGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,14 +19,12 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ReceivablesService {
+public class ReceivablesService2 {
 
     private final RestTemplate restTemplate;
     private final CrsProperties crsProperties;
@@ -41,15 +37,15 @@ public class ReceivablesService {
     private String transactionEndpoint;
 
     @Value("${payment.api.username}")
-    private String userName;
+    private String apiUsername;
 
     @Value("${payment.api.password}")
-    private String password;
+    private String apiPassword;
 
     /**
      * Fetch Payment Response based on ticketNumber
      */
-    public HostedPaymentPageDTO getPaymentResponse(String ticketNumber) {
+    public CategoryLookupResultsDTO getPaymentResponse(String ticketNumber) {
         String url = UriComponentsBuilder.fromHttpUrl(crsProperties.getBaseUrl())
                 .path("/revenue-accounting/v1/receivables")
                 .queryParam("vendorID", crsProperties.getVendorId())
@@ -65,7 +61,7 @@ public class ReceivablesService {
         log.info("Request URL for ticket details: {}", url);
 
         // Add Basic Auth headers for Receivables call
-        HttpHeaders headers = createBasicAuthHeaders(userName, password);
+        HttpHeaders headers = createBasicAuthHeaders();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<CategoryLookupResultsDTO> receivablesResponse =
@@ -74,29 +70,34 @@ public class ReceivablesService {
         CategoryLookupResultsDTO categoryLookupResultsDTO = receivablesResponse.getBody();
         log.info("CategoryLookupResultsDTO: {}", categoryLookupResultsDTO);
 
-        PaymentRequestDTO paymentRequestDTO = PaymentRequestMapper.mapFromReceivablesResponse(categoryLookupResultsDTO);
-        String clientTransactionId = TransactionIdGenerator.generateClientTransactionId();
+//        PaymentRequestDTO paymentRequestDTO = PaymentRequestMapper.mapFromReceivablesResponse(categoryLookupResultsDTO);
+//        String clientTransactionId = TransactionIdGenerator.generateClientTransactionId();
+//
+//        // Save clientTransactionId in DB (to be implemented)
+//        paymentRequestDTO.setClientTransactionId(clientTransactionId);
+//        log.info("PaymentRequestDTO: {}", paymentRequestDTO);
 
-        // Save clientTransactionId in DB (to be implemented)
-        paymentRequestDTO.setClientTransactionId(clientTransactionId);
-        log.info("PaymentRequestDTO: {}", paymentRequestDTO);
-
-        return createHostedPayment(paymentRequestDTO);
+        return categoryLookupResultsDTO;
+//        return createHostedPayment(paymentRequestDTO);
     }
 
     /**
      * Create Hosted Payment Page
      */
-    public HostedPaymentPageDTO createHostedPayment(PaymentRequestDTO request) {
+    public HostedPaymentPageDTO submitPayment(PaymentRequestDTO request) {
         String url = hostname + transactionEndpoint;
         log.info("Calling Payment API at: {}", url);
 
         // add url and location details
 
+        String clientTransactionId = TransactionIdGenerator.generateClientTransactionId();
+
+        // Save clientTransactionId in DB (to be implemented)
+        request.setClientTransactionId(clientTransactionId);
         request.setReturnUrl(cpgProperties.getReturnUrl());
         request.setCancelUrl(cpgProperties.getCancelUrl());
         request.setApplicationName(cpgProperties.getApplicationName());
-        request.setEmail("rakeshreddy.dontireddy@cai.io");
+//        request.setEmail("rakeshreddy.dontireddy@cai.io");
         LocationDTO locationDTO = new LocationDTO(cpgProperties.getLocationId(),
                 cpgProperties.getChannel(), cpgProperties.getTerminalId(),
                 cpgProperties.getVendorId());
@@ -105,7 +106,7 @@ public class ReceivablesService {
 
         // add url and location details
 
-        HttpHeaders headers = createBasicAuthHeaders(userName, password);
+        HttpHeaders headers = createBasicAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -146,29 +147,14 @@ public class ReceivablesService {
     /**
      * Utility to generate Basic Auth headers
      */
-    private HttpHeaders createBasicAuthHeaders(String username, String password) {
-        String auth = username + ":" + password;
+    private HttpHeaders createBasicAuthHeaders() {
+        String auth = apiUsername + ":" + apiPassword;
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth);
         return headers;
     }
-
-
-    public List<TransactionResponseDTO> getTransactions(String clientTransactionId, String transactionType) {
-        String url = hostname + "/apigateway/transactions?clientTransactionId="
-                + clientTransactionId + "&transactionType=" + transactionType;
-
-        HttpHeaders headers = createBasicAuthHeaders(userName, password);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<TransactionResponseDTO[]> response = restTemplate.exchange(
-                url, HttpMethod.GET, entity, TransactionResponseDTO[].class);
-
-        return Arrays.asList(response.getBody());
-    }
-
     public String decrypt(String encryptedText) {
         return DecryptPayload.decrypt(encryptedText, cpgProperties.getEncryptionKey());
     }

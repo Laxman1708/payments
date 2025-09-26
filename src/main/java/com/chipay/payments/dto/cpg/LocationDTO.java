@@ -1,4 +1,4 @@
-package com.chipay.payments.crs.dto;
+package com.chipay.payments.dto.cpg;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,6 +11,9 @@ public class LocationDTO {
     @JsonProperty("locationId")
     private String locationId;
 
+    @JsonProperty("name")
+    private String name;
+
     @JsonProperty("channel")
     private String channel;
 
@@ -19,5 +22,7 @@ public class LocationDTO {
 
     @JsonProperty("vendorId")
     private String vendorId;
-}
 
+    @JsonProperty("applicationId")
+    private String applicationId;
+}

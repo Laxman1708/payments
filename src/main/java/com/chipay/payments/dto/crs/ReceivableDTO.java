@@ -1,4 +1,4 @@
-package com.chipay.payments.crs.dto;
+package com.chipay.payments.dto.crs;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,4 +34,13 @@ public class ReceivableDTO {
 
     @JsonProperty("allocationOrder")
     private String allocationOrder;
+
+    @JsonProperty("amountPaid")
+    private BigDecimal amountPaid;
+
+    @JsonProperty("transactionType")
+    private BigDecimal transactionType;
+
+    @JsonProperty("email")
+    private BigDecimal email;
 }

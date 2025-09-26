@@ -1,4 +1,4 @@
-package com.chipay.payments.crs.config;
+package com.chipay.payments.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,14 +1,10 @@
-package com.chipay.payments.crs.dto;
+package com.chipay.payments.dto.cpg;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdditionalInformationDTO {
 
@@ -18,7 +14,7 @@ public class AdditionalInformationDTO {
     @JsonProperty("Violation Site")
     private String violationSite;
 
-    @JsonProperty("Owner ZipCode")
+    @JsonProperty("Owner Zip Code")
     private String ownerZipCode;
 
     @JsonProperty("Original Fine")
@@ -26,6 +22,9 @@ public class AdditionalInformationDTO {
 
     @JsonProperty("Date Issued")
     private String dateIssued;
+
+    @JsonProperty("DL Number")
+    private String dlNumber;
 
     @JsonProperty("Lic Plate State")
     private String licPlateState;
@@ -42,11 +41,11 @@ public class AdditionalInformationDTO {
     @JsonProperty("Last Notice Date")
     private String lastNoticeDate;
 
-    @JsonProperty("Collection Agency Name")
-    private String collectionAgencyName;
-
     @JsonProperty("Vin Num")
     private String vinNum;
+
+    @JsonProperty("Payment Plan Number")
+    private String paymentPlanNumber;
 
     @JsonProperty("Final Determination Amount")
     private String finalDeterminationAmount;
@@ -90,3 +89,4 @@ public class AdditionalInformationDTO {
     @JsonProperty("Ticket Type")
     private String ticketType;
 }
+

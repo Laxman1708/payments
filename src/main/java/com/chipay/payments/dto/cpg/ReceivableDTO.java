@@ -1,13 +1,17 @@
-package com.chipay.payments.cpg.dto;
+package com.chipay.payments.dto.cpg;
 
-import com.chipay.payments.crs.dto.AdditionalInformationDTO;
+import com.chipay.payments.dto.crs.AdditionalInformationDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Data
+@Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReceivableDTO {
 
@@ -25,5 +29,6 @@ public class ReceivableDTO {
 
     @JsonProperty("amountPaid")
     private BigDecimal amountPaid;
+
 }
 

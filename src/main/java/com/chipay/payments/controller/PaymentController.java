@@ -1,11 +1,14 @@
 package com.chipay.payments.controller;
 
-import com.chipay.payments.cpg.dto.HostedPaymentPageDTO;
-import com.chipay.payments.cpg.dto.PaymentRequestDTO;
-import com.chipay.payments.crs.dto.PaymentRequest;
-import com.chipay.payments.crs.dto.RootDTO;
+import com.chipay.payments.dto.cpg.HostedPaymentPageDTO;
+import com.chipay.payments.dto.cpg.PaymentRequestDTO;
+import com.chipay.payments.dto.cpg.PaymentStatusResponseDTO;
+import com.chipay.payments.dto.crs.CategoryLookupResultsDTO;
+import com.chipay.payments.dto.crs.PaymentRequest;
+import com.chipay.payments.dto.crs.RootDTO;
 import com.chipay.payments.mapper.PaymentRequestMapper;
-import com.chipay.payments.service.ReceivablesService;
+import com.chipay.payments.service.ReceivablesService2;
+import com.chipay.payments.util.JsonUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    private final ReceivablesService receivablesService;
+    private final ReceivablesService2 receivablesService;
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> processPayment(@Valid @RequestBody PaymentRequest paymentRequest) {
@@ -47,9 +50,9 @@ public class PaymentController {
     }
 
     @GetMapping("/{ticketNumber}")
-    public ResponseEntity<HostedPaymentPageDTO> getPaymentResponse(@PathVariable String ticketNumber) {
+    public ResponseEntity<CategoryLookupResultsDTO> getPaymentResponse(@PathVariable String ticketNumber) {
 
-        HostedPaymentPageDTO response = receivablesService.getPaymentResponse(ticketNumber);
+        CategoryLookupResultsDTO response = receivablesService.getPaymentResponse(ticketNumber);
         log.info("Receivables response for ticket {}: {}", ticketNumber, response);
 
         if (response != null) {
@@ -59,9 +62,40 @@ public class PaymentController {
         }
     }
 
-    @PostMapping(("/testCPG"))
+    @PostMapping(("/submitPayment"))
+    public ResponseEntity<HostedPaymentPageDTO> submitPayment(@Valid @RequestBody RootDTO request) {
+//        PaymentRequestDTO paymentRequestDTO = PaymentRequestMapper.mapFromReceivablesResponse(paymentRequest.getCategoryLookupResults());
+        PaymentRequestDTO paymentRequest = PaymentRequestMapper.mapFromReceivablesResponse(request.getCategoryLookupResults());
+        HostedPaymentPageDTO paymentRequestDTO = receivablesService.submitPayment(paymentRequest);
+        return ResponseEntity.ok(paymentRequestDTO);
+    }
+
+/*    @PostMapping(("/testCPG"))
     public ResponseEntity<PaymentRequestDTO> testCPG(@Valid @RequestBody RootDTO paymentRequest) {
         PaymentRequestDTO paymentRequestDTO = PaymentRequestMapper.mapFromReceivablesResponse(paymentRequest.getCategoryLookupResults());
         return ResponseEntity.ok(paymentRequestDTO);
+    }*/
+
+
+ /*   @GetMapping("/transactions")
+    public ResponseEntity<List<TransactionResponseDTO>> getTransactions(
+            @RequestParam String clientTransactionId,
+            @RequestParam String transactionType) {
+
+        log.info("Fetching transactions for clientTransactionId={} transactionType={}", clientTransactionId, transactionType);
+
+//        List<TransactionResponseDTO> response = receivablesService.getTransactions(clientTransactionId, transactionType);
+
+        log.info("Transactions response: {}", response);
+
+        return ResponseEntity.ok(response);
+    }*/
+
+    @GetMapping("/decrypt")
+    public ResponseEntity<PaymentStatusResponseDTO> decryptContent(@RequestParam String encryptedText) {
+        String decryptedJson = receivablesService.decrypt(encryptedText);
+
+        PaymentStatusResponseDTO paymentStatusResponseDTO = JsonUtils.convertStringToObject(decryptedJson, PaymentStatusResponseDTO.class);
+        return ResponseEntity.ok(paymentStatusResponseDTO);
     }
 }

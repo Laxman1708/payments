@@ -1,4 +1,4 @@
-package com.chipay.payments.cpg.dto;
+package com.chipay.payments.dto.cpg;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,14 +20,12 @@ public class HostedPaymentPageDTO {
 
     @JsonProperty("sessionStartDateTime")
     private String sessionStartDateTime;
-    // 👉 Can be OffsetDateTime for strict parsing
 
     @JsonProperty("clientTransactionId")
     private String clientTransactionId;
 
     @JsonProperty("sessionExpiryDateTime")
     private String sessionExpiryDateTime;
-    // 👉 Can be OffsetDateTime too
 
     @JsonProperty("locationId")
     private String locationId;
@@ -41,4 +39,5 @@ public class HostedPaymentPageDTO {
     @JsonProperty("hostedPaymentPageUrl")
     private String hostedPaymentPageUrl;
 }
+
 

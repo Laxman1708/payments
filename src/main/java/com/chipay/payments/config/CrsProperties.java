@@ -1,4 +1,4 @@
-package com.chipay.payments.crs.config;
+package com.chipay.payments.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
